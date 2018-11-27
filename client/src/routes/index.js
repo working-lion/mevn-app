@@ -1,7 +1,14 @@
-import Start from '@/components/pages/StartPage'
-import Posts from '@/components/pages/PostsPage'
-import NewPost from '@/components/pages/NewPostPage'
-import EditPost from '@/components/pages/EditPostPage'
+import Start from '@/components/pages/posts/StartPage'
+
+// posts
+import Posts from '@/components/pages/posts/PostsPage'
+import NewPost from '@/components/pages/posts/NewPostPage'
+import EditPost from '@/components/pages/posts/EditPostPage'
+
+// tasks
+import Tasks from '@/components/pages/tasks/TasksPage.vue'
+
+
 
 const routes = [
   {
@@ -9,6 +16,7 @@ const routes = [
     name: 'Start',
     component: Start
   },
+  // posts
   {
     path: '/posts',
     name: 'Posts',
@@ -23,7 +31,13 @@ const routes = [
     path: '/posts/:id',
     name: 'EditPost',
     component: EditPost
-  }
+  },
+  // tasks
+  {
+    path: '/tasks',
+    name: 'Tasks',
+    component: Tasks
+  },
 ]
 
 export default routes

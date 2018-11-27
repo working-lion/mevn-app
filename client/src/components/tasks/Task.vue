@@ -1,13 +1,10 @@
 <template>
   <div class="task-item">
     <div class="task-item-header">
-      header
-    </div>
-    <div class="task-item-body">
       <div class="task-item-name">{{ name }}</div>
     </div>
     <div class="task-item-footer">
-      {{ propName }}
+      <div class="created">{{ created }}</div>
     </div>
   </div>
 </template>
@@ -20,7 +17,8 @@ export default {
   },
   data () {
     return {
-      name: 'Название задачи'
+      name: 'Название задачи',
+      created: '27.10.18'
     }
   }
 }
@@ -33,7 +31,7 @@ export default {
     margin: 5px 0;
     padding: 5px;
   }
-  .task-item-header, .task-item-footer {
+  .task-item-footer {
     color: #999;
     font-size: 0.8em;
   }

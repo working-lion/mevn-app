@@ -1,12 +1,8 @@
 <template>
   <div class="body">
-    <div class="header">
-      <div class="header-left"></div>
-      <div class="header-center">
-        <div class="logo">{{ logo }}</div>
-      </div>
-      <div class="header-right"></div>
-    </div>
+
+    <header-block></header-block>
+
     <div class="content">
       <div class="desk-header">
         <div class="desk-header-left"><span class="desk-name">Название доски</span></div>
@@ -16,28 +12,27 @@
       <task-list></task-list>
 
     </div>
-    <div class="footer">
-      <div class="footer-left"></div>
-      <div class="footer-center">
-        <div class="footer-logo">{{ footer_logo }}</div>
-      </div>
-      <div class="footer-right"></div>
-    </div>
+
+    <footer-block></footer-block>
+
   </div>
 </template>
 
 <script>
+  import headerBlock from '@/components/Header'
+  import footerBlock from '@/components/Footer'
   import taskList from '@/components/tasks/TaskList'
 
   export default {
     name: 'start-page',
     components: {
-      taskList
+      taskList,
+      headerBlock,
+      footerBlock,
     },
     data() {
       return {
         name: 'НАЗВАНИЕ РАБОЧЕГО СТОЛА',
-        logo: 'LOGO',
         footer_logo: 'FOOTER_LOGO'
       }
     }
@@ -48,12 +43,6 @@
 <style scoped>
   a {
     color: rgb(0, 174, 204);
-  }
-  .header, .footer {
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.15);
-    display: flex;
-    justify-content: space-between;
   }
   .body {
     position: relative;
@@ -68,12 +57,6 @@
   }
   .desk-header a {
     color: #fff;
-  }
-  .footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
   }
   .desk-header {
     padding: 10px;
