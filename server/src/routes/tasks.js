@@ -20,4 +20,15 @@ router.post('/tasks', (req, res) => {
   })
 })
 
+// Read
+router.get('/tasks', (req, res) => {
+  Task.find({}, 'title description', (err, posts) => {
+    if (err) {
+      res.sendStatus(500)
+    } else {
+      res.send({ tasks: tasks })
+    }
+  }).sort({ _id: -1 })
+})
+
 module.exports = router

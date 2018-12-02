@@ -8,9 +8,6 @@ const TaskSchema = new Schema({
   },
   description: {
     type: String
-  },
-  created: {
-    type: Date
   }
 })
 

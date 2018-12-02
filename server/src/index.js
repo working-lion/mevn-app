@@ -16,7 +16,8 @@ app.use(bodyParser.json())
 app.use(cors())
 
 // маршруты
-app.use(require('./routes/posts'))
+app.use(require('./routes/rules'))
+//app.use(require('./routes/posts'))
 //app.use(require('./routes/tasks'))
 
 mongoose.connect(config.dbURL, config.dbOptions)

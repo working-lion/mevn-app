@@ -52,17 +52,6 @@
   .content {
     padding: 0 10px;
   }
-  .desk-name {
-    font-weight: 600;
-  }
-  .desk-header a {
-    color: #fff;
-  }
-  .desk-header {
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-  }
   .column-list {
     display: inline-flex;
     align-items: start;

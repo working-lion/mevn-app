@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="page-footer">
     <div class="footer-left"></div>
     <div class="footer-center">
       <div class="footer-logo">{{ footerLogo }}</div>
@@ -20,7 +20,7 @@
 </script>
 
 <style scoped>
-  footer {
+  .page-footer {
     padding: 10px;
     background: rgba(0, 0, 0, 0.15);
     display: flex;

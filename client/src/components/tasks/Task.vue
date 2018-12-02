@@ -1,10 +1,10 @@
 <template>
-  <div class="task-item">
+  <div class="task-item" :data-id="task._id">
     <div class="task-item-header">
-      <div class="task-item-name">{{ name }}</div>
+      <div class="task-item-name">{{ title }}</div>
     </div>
     <div class="task-item-footer">
-      <div class="created">{{ created }}</div>
+      <div class="created">вспом. инфа</div>
     </div>
   </div>
 </template>
@@ -13,12 +13,17 @@
 export default {
   name: 'task-item',
   props: {
-    propName: String
+    task: {
+      type: Object,
+      required: true,
+      default: {
+        title: 'Task name'
+      }
+    }
   },
   data () {
     return {
-      name: 'Название задачи',
-      created: '27.10.18'
+      title: this.task.title
     }
   }
 }

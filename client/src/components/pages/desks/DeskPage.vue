@@ -5,7 +5,7 @@
 
     <div class="content">
 
-      <desk-header></desk-header>
+      <desk-header :title="title"></desk-header>
 
       <task-list></task-list>
 
@@ -23,6 +23,11 @@
   import deskHeader from '@/components/desks/DeskHeader'
   import taskList from '@/components/tasks/TaskList'
 
+  // Services
+  import TasksService from '@/services/DesksService'
+
+  var deskId = '5bfebc83ea132727dcb26da2';
+
   export default {
     name: 'task-list-page',
     components: {
@@ -32,17 +37,23 @@
       footerBlock,
     },
     data () {
-      return {}
-    },
-    /*methods: {
-      async getTasks() {
-        const response = await TasksService.getTasks()
-        this.tasks = response.data.tasks
+      return {
+        _id: '',
+        title: '',
+        list: []
       }
     },
+    methods: {
+      async getDesk() {
+        const response = await DesksService.getDesk(deskId);
+        this.id = response.data._id;
+        this.title = response.data.title;
+        this.list = response.data.list;
+      },
+    },
     mounted () {
-      this.getTasks()
-    }*/
+      this.getDesk();
+    }
   }
 
   //import PostsService from '@/services/PostsService'

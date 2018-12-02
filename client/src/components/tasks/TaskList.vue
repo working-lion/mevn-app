@@ -11,9 +11,8 @@
             <div class="tasks-list">
               <task-item
                 v-for="task in tasks"
-                v-bind:key="task.id"
-                v-bind:task="task"
-                :prop-name="'Hello' + 1"
+                :key="task.id"
+                :task="task"
               >
               </task-item>
             </div>
@@ -28,43 +27,38 @@
 </template>
 
 <script>
+  // components
   import taskItem from '@/components/tasks/Task'
+
+  // Services
+  import TasksService from '@/services/TasksService'
 
   export default {
     name: 'task-list',
     components: {
       taskItem
     },
-    data() {
+    data () {
       return {
         name: 'Название списка задач',
-        tasks: [
-          // тут нужно запрашивать данные из БД.
-          {
-            id: 1,
-            name: 'Задача 1'
-          },
-          {
-            id: 2,
-            name: 'Задача 2'
-          },
-          {
-            id: 3,
-            name: 'Задача 3'
-          },
-          {
-            id: 4,
-            name: 'Задача 4'
-          },
-        ]
+        tasks: []
       }
+    },
+    methods: {
+      async getTasks() {
+        const response = await TasksService.getTasks()
+        this.tasks = response.data.tasks
+      },
+    },
+    mounted () {
+      this.getTasks()
     }
   }
 </script>
 
 <style scoped>
   .column-list {
-    display: inline-flex;
+    display: flex;
     align-items: start;
     justify-content: flex-start;
   }
