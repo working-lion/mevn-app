@@ -3,7 +3,7 @@ const router = express.Router()
 
 // models
 const Post = require('../models/post-model')
-const Task = require('../models/task-model')
+//const Task = require('../models/task-model')
 const Desk = require('../models/desk-model')
 
 /* ============ Desks ============ */
@@ -25,10 +25,21 @@ router.get('/desks/:id', (req, res) => {
   let deskId = req.params.id;
 
   Desk.findById(deskId, 'title description list', (err, desk) => {
-    if (err) {
+    /*if (err) {
       res.sendStatus(500)
     } else {
       res.json(desk)
+    }*/
+    if (err) {
+      res.send({
+        success: false,
+        error: err
+      });
+    } else {
+      res.send({
+        success: true,
+        desk: desk
+      })
     }
   })
 })
@@ -69,6 +80,27 @@ router.post('/desks', (req, res) => {
   })
 })
 
+// Write task
+/*TODO: тут нужно добавлять задачу по id списка*/
+router.post('/desks/addTask', (req, res) => {
+  const task = new Task({
+    title: req.body.title
+  })
+  task.save((err, data) => {
+    if (err) {
+      res.send({
+        success: false,
+        error: err
+      });
+    } else {
+      res.send({
+        success: true,
+        _id: data._id
+      })
+    }
+  })
+})
+
 // Delete
 router.delete('/desks/:id', (req, res) => {
   Desk.remove({ _id: req.params.id }, err => {
@@ -88,7 +120,7 @@ router.delete('/desks/:id', (req, res) => {
 /* ============ Tasks ============ */
 
 // Write
-router.post('/tasks', (req, res) => {
+/*router.post('/tasks', (req, res) => {
   const task = new Task({
     title: req.body.title,
     description: req.body.description
@@ -127,7 +159,7 @@ router.get('/tasks/:id', (req, res) => {
       res.send({ task: task })
     }
   }).sort({ _id: -1 })
-})
+})*/
 
 
 /* ============ Posts ============*/

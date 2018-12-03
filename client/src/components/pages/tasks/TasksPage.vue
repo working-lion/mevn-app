@@ -20,13 +20,13 @@
   // Components
   import headerBlock from '@/components/Header'
   import footerBlock from '@/components/Footer'
-  import deskHeader from '@/components/desks/DeskHeader'
+  //import deskHeader from '@/components/desks/DeskHeader'
   import taskList from '@/components/tasks/TaskList'
 
   export default {
     name: 'task-list-page',
     components: {
-      deskHeader,
+      /*deskHeader,*/
       taskList,
       headerBlock,
       footerBlock,

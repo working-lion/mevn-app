@@ -12,6 +12,10 @@ export default {
   },
   getDesk(id) {
     return api().get(`desks/${id}`)
+  },
+  //tasks
+  addNewTask(params){
+    return api().post('desks/addTask', params);
   }
 
 }

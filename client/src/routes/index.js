@@ -14,14 +14,14 @@ import Desk from '@/components/pages/desks/DeskPage.vue'
 const routes = [
   //desks
   {
-    path: '/desks',
-    name: 'DeskList',
-    component: DeskList
-  },
-  {
     path: '/desks/:id',
     name: 'Desk',
     component: Desk
+  },
+  {
+    path: '/desks',
+    name: 'DeskList',
+    component: DeskList
   },
   // posts
   {
@@ -40,11 +40,11 @@ const routes = [
     component: EditPost
   },
   // tasks
-  {
+  /*{
     path: '/tasks',
     name: 'Tasks',
     component: Tasks
-  }
+  }*/
 ]
 
 export default routes

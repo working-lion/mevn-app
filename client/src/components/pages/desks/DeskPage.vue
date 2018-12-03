@@ -5,9 +5,43 @@
 
     <div class="content">
 
-      <desk-header :title="title"></desk-header>
+      <div class="desk-header">
+        <div class="desk-header-left"><span class="desk-name">{{ desk.title }}</span></div>
+        <div class="desk-header-right"><a href="#" class="desk-menu">меню</a></div>
+      </div>
 
-      <task-list></task-list>
+      <div class="desk-body">
+        <div class="column-list-scroll">
+
+          <task-list
+            v-for="taskList in desk.list"
+            :key="taskList._id"
+            :task-list="taskList"
+            v-on:open-modal="openModal"
+          ></task-list>
+
+        </div>
+
+        <modal
+          v-show="isModalVisible"
+          @close="closeModal"
+          v-on:submit-form="addTask"
+        >
+          <template slot="header">
+            Добавить новую задачу
+          </template>
+          <template slot="body">
+            <form>
+              <div class="form-row">
+                <label for="add-desk-title">Введите название задачи:</label>
+                <input id="add-desk-title" type="text" v-model="addTaskData.title">
+              </div>
+            </form>
+          </template>
+          <template slot="btn-text">Добавить</template>
+        </modal>
+
+      </div>
 
     </div>
 
@@ -20,63 +54,86 @@
   // Components
   import headerBlock from '@/components/Header'
   import footerBlock from '@/components/Footer'
-  import deskHeader from '@/components/desks/DeskHeader'
   import taskList from '@/components/tasks/TaskList'
+  import modal from '@/components/forms/ModalForm';
 
   // Services
-  import TasksService from '@/services/DesksService'
+  import DesksService from '@/services/DesksService'
 
   var deskId = '5bfebc83ea132727dcb26da2';
 
   export default {
     name: 'task-list-page',
     components: {
-      deskHeader,
       taskList,
       headerBlock,
       footerBlock,
+      modal
     },
-    data () {
+    data() {
       return {
-        _id: '',
-        title: '',
-        list: []
+        desk: {},
+        isModalVisible: false,
+        addTaskData: {
+          _id: '',
+          title: ''
+        }
       }
     },
     methods: {
+      openModal(){
+        this.isModalVisible = true;
+      },
+      closeModal(){
+        this.isModalVisible = false;
+      },
+      async addTask(){
+        let response = await  DesksService.addNewTask({
+          title: addTaskData.title
+        });
+
+        /*TODO: получить ключ списка задач, в который добавляем задачу*/
+        let listKey = 0;
+
+        if (response.data.success === true) {
+          this.addTaskData._id = response.data._id;
+
+          this.desk.list[listKey].push(this.addDeskData);
+
+          closeModal();
+          /*TODO:
+          * 1) При добавлении второй задачи первая меняется*/
+        }
+        else {
+          //error-message
+          console.log(response.data.error);
+        }
+      },
       async getDesk() {
         const response = await DesksService.getDesk(deskId);
-        this.id = response.data._id;
-        this.title = response.data.title;
-        this.list = response.data.list;
+        this.desk = response.data.desk;
       },
     },
-    mounted () {
+    mounted() {
       this.getDesk();
     }
   }
-
-  //import PostsService from '@/services/PostsService'
-
-  /*export default {
-    name: 'PostsPage',
-    data () {
-      return {
-        posts: []
-      }
-    },
-    methods: {
-      async getPosts () {
-        const response = await PostsService.fetchPosts()
-        this.posts = response.data.posts
-      },
-      async removePost (value) {
-        await PostsService.deletePost(value)
-        this.getPosts()
-      }
-    },
-    mounted () {
-      this.getPosts()
-    }
-  }*/
 </script>
+
+<style>
+  .column-list-scroll {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .desk-name {
+    font-weight: 600;
+  }
+  .desk-header a {
+    color: #fff;
+  }
+  .desk-header {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>

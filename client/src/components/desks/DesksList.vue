@@ -3,8 +3,8 @@
     <div class="desks-list">
       <div class="desks-list-empty" v-if="desks.length === 0">Добавьте свою первую доску</div>
       <a
-        href="#"
-        class="deks-item"
+        href=""
+        class="desk-item"
         v-for="deskItem in desks"
         :key="deskItem._id"
       >
@@ -89,7 +89,7 @@
           this.addDeskData._id = response.data._id;
           this.desks.push(this.addDeskData);
 
-          this.isModalVisible = false;
+          closeModal();
           /*TODO:
           * 1) При добавлении второй доски первая меняется*/
         }
@@ -143,7 +143,7 @@
     justify-content: flex-start;
     flex-wrap: wrap;
   }
-  .deks-item, .add-desk {
+  .desk-item, .add-desk {
     width: 23.5%;
     height: 80px;
     padding: 15px 5px;
@@ -157,10 +157,10 @@
     text-decoration: none;
     position: relative;
   }
-  .deks-item:hover, .add-desk:hover {
+  .desk-item:hover, .add-desk:hover {
     background: rgba(0, 0, 0, 0.2);
   }
-  .deks-item:nth-child(4n), .add-desk:nth-child(4n) {
+  .desk-item:nth-child(4n), .add-desk:nth-child(4n) {
     margin-right: 0;
   }
   .desk-item-name {
@@ -211,7 +211,7 @@
     padding: 2px 10px;
     display: none;
   }
-  .deks-item:hover .desk-item-menu-btn {
+  .desk-item:hover .desk-item-menu-btn {
     display: block;
   }
   .desk-item-menu {
@@ -231,6 +231,7 @@
     padding-left: 0;
     margin-bottom: 5px;
     transition: padding 0.3s;
+    cursor: pointer;
   }
   .desk-item-menu li:hover {
     color: rgb(0, 174, 204);
@@ -243,14 +244,14 @@
     display: block;
     width: 5px;
     height: 5px;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
     position: relative;
   }
   .desk-item-menu-btn:hover .desk-item-menu-circle,
   .desk-item-menu-btn:hover .desk-item-menu-circle::before,
   .desk-item-menu-btn:hover .desk-item-menu-circle::after {
-    background: rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 0.9);
   }
   .desk-item-menu-circle::before, .desk-item-menu-circle::after {
     content: '';
