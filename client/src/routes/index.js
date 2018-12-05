@@ -10,8 +10,16 @@ import Tasks from '@/components/pages/tasks/TasksPage.vue'
 import DeskList from '@/components/pages/desks/DeskListPage.vue'
 import Desk from '@/components/pages/desks/DeskPage.vue'
 
+// start
+import StartPage from '@/components/pages/StartPage';
+
 
 const routes = [
+  {
+    path: '/',
+    name: 'StartPage',
+    component: StartPage
+  },
   //desks
   {
     path: '/desks/:id',

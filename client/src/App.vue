@@ -18,7 +18,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100vw;
-    height: 100vh;
+    min-width: 100vh;
     background: rgb(0, 174, 204);
   }
 </style>

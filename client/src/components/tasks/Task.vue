@@ -1,8 +1,8 @@
 <template>
-  <div class="task-item" :data-id="task._id">
+  <div class="task-item" :data-id="task.id" v-if="task.hasOwnProperty('id') && task.id">
     <div class="task-item-header">
+      <div class="task-item-number">{{ task.number }}</div>
       <div class="task-item-name">{{ task.title }}</div>
-
       <span class="task-item-menu-btn">
         <span class="task-item-menu-circle"></span>
         <ul class="task-item-menu">
@@ -13,7 +13,15 @@
 
     </div>
     <div class="task-item-footer">
-      <div class="created">вспом. инфа</div>
+      <div class="task-prop">Статус:
+        <span class="task-prop-val">{{ task.status.name }}</span>
+      </div>
+      <div class="task-prop">Приоритет:
+        <span class="task-prop-val">{{ task.priority.name }}</span>
+      </div>
+      <div class="task-prop">Версия:
+        <span class="task-prop-val">{{ task.version.name }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -24,10 +32,7 @@
     props: {
       task: {
         type: Object,
-        required: true,
-        default: {
-          title: 'Task name'
-        }
+        default: {}
       }
     }
   }
@@ -43,9 +48,17 @@
   .task-item-header {
     position: relative;
   }
+  .task-item-number {
+    color: #323232;
+    margin-bottom: 5px;
+  }
+  .task-item-name {
+    font-size: 14px;
+  }
   .task-item-footer {
     color: #999;
     font-size: 0.8em;
+    padding-top: 5px;
   }
   .task-item-menu-btn {
     position: absolute;

@@ -1,7 +1,6 @@
 <template>
   <div class="desks-list-container">
     <div class="desks-list">
-      <div class="desks-list-empty" v-if="desks.length === 0">Добавьте свою первую доску</div>
       <a
         href=""
         class="desk-item"
@@ -127,7 +126,7 @@
       },
     },
     mounted() {
-      this.getDesks()
+      //this.getDesks()
     }
   }
 </script>
