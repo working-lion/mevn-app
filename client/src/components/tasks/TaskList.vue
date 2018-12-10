@@ -6,6 +6,7 @@
         <task-item
           v-for="task in taskList"
           :key="task.id"
+          v-if="task.show"
           :task="task"
         >
         </task-item>
@@ -49,7 +50,8 @@
     border-radius: 3px;
     padding: 5px;
     margin: 0 5px;
-    width: 300px;
+    flex-grow: 1;
+    flex-basis: 100%;
   }
   .add-task {
     display: block;

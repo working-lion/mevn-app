@@ -3,13 +3,12 @@
     <div class="modal-backdrop">
       <div class="modal">
         <header class="modal-header">
-          <button
-            type="button"
+          <span
             class="btn-close"
             @click="close"
           >
             &times;
-          </button>
+          </span>
           <slot name="header">
             This is the default tile!
           </slot>
@@ -41,15 +40,14 @@
 
 <script>
   export default {
-    name: 'modal',
-
+    name: 'modal-form-view',
     methods: {
       close() {
         this.$emit('close');
       },
       submitForm(){
         this.$emit('submit-form');
-      }
+      },
     },
   };
 </script>
@@ -89,29 +87,44 @@
     border-radius: 3px;
     transition: all .3s ease;
   }
-  .modal-header,
-  .modal-footer {
-    padding: 15px;
-    display: flex;
-  }
   .modal-header {
     border-bottom: 1px solid #eeeeee;
     color: #4AAE9B;
     font-weight: 600;
-    justify-content: space-between;
+    padding: 15px;
   }
   .modal-footer {
     border-top: 1px solid #eeeeee;
+    padding: 15px;
+    display: flex;
     justify-content: flex-end;
   }
   .modal-body {
     position: relative;
     padding: 20px 10px;
   }
-  .form-row label, .form-row input:not([type="submit"]) {
-    width: 100%;
+  div[class^="form-row-"] {
+    display: flex;
+    justify-content: space-between;
   }
-  .form-row input:not([type="submit"]), .form-row textarea {
+  .form-row-2 .form-row {
+    width: 49%;
+  }
+  .form-row-3 .form-row {
+    width: 32%;
+  }
+  .form-row {
+    margin: 0 0 15px;
+  }
+  .form-row:last-child {
+    margin-bottom: 0;
+  }
+  .form-row input:not([type="submit"]),
+  .form-row textarea,
+  .form-row select {
+    color: #323232;
+    font-size: 16px;
+    font-family: Arial;
     width: 100%;
     height: 32px;
     padding: 0 10px;
@@ -121,19 +134,20 @@
   }
   .form-row input:focus,
   .form-row textarea:focus,
-  [type="submit"]:hover {
+  .form-row [type="submit"]:hover {
     box-shadow: 1px 1px 3px 0 rgba(153, 153, 153, 1);
   }
-  .form-row {
-    margin: 0 0 15px;
-  }
-  .form-row:last-child {
-    margin-bottom: 0;
+  .form-row textarea {
+    min-height: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 1.2;
   }
   .form-row.form-row-submit {
     margin-bottom: 0;
   }
-  label {
+  .form-row label {
+    width: 100%;
     color: #999999;
     font-size: 14px;
     display: block;
@@ -155,7 +169,6 @@
     cursor: pointer;
   }
   .btn-close {
-    border: none;
     font-size: 20px;
     line-height: 1;
     cursor: pointer;

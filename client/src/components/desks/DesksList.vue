@@ -27,41 +27,17 @@
       </a>
     </div>
 
-    <modal
-      v-show="isModalVisible"
-      @close="closeModal"
-      v-on:submit-form="addDesk"
-    >
-      <template slot="header">
-        Добавить новую доску
-      </template>
-      <template slot="body">
-        <form>
-          <div class="form-row">
-            <label for="add-desk-title">Введите название доски:</label>
-            <input id="add-desk-title" type="text" v-model="addDeskData.title">
-          </div>
-        </form>
-      </template>
-      <template slot="btn-text">Добавить</template>
-    </modal>
   </div>
 
 
 </template>
 
 <script>
-  // components
-  import modal from '@/components/forms/ModalForm';
-
   // Services
   import DesksService from '@/services/DesksService'
 
   export default {
     name: 'desks-list',
-    components: {
-      modal
-    },
     data() {
       return {
         isModalVisible: false,

@@ -1,7 +1,7 @@
 <template>
   <div class="task-item" :data-id="task.id" v-if="task.hasOwnProperty('id') && task.id">
     <div class="task-item-header">
-      <div class="task-item-number">{{ task.number }}</div>
+      <div class="task-item-number" @click="taskClickHandler">{{ task.number }}</div>
       <div class="task-item-name">{{ task.title }}</div>
       <span class="task-item-menu-btn">
         <span class="task-item-menu-circle"></span>
@@ -22,17 +22,28 @@
       <div class="task-prop">Версия:
         <span class="task-prop-val">{{ task.version.name }}</span>
       </div>
+      <div class="task-prop">Тип:
+        <span class="task-prop-val">{{ task.type.name }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  // bus
+  import {bus} from '@/main';
+
   export default {
     name: 'task-item',
     props: {
       task: {
         type: Object,
         default: {}
+      }
+    },
+    methods: {
+      taskClickHandler(){
+        bus.$emit('open-task-right', this.task);
       }
     }
   }
@@ -51,6 +62,11 @@
   .task-item-number {
     color: #323232;
     margin-bottom: 5px;
+    cursor: pointer;
+  }
+  .task-item-number:hover {
+    color: #666;
+    text-decoration: underline;
   }
   .task-item-name {
     font-size: 14px;

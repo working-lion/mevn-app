@@ -6,6 +6,7 @@ import priorityList from '@/db_json/priority_list';
 import taskStatusList from '@/db_json/task_status_list';
 import taskTypeList from '@/db_json/task_type_list';
 import versionList from '@/db_json/version_list';
+// import filterValues from '@/db_json/filter_values_list';
 
 export default {
   getTaskList() {
@@ -34,7 +35,8 @@ export default {
         type: taskTypeList[randomInteger(0, taskTypeList.length - 1)],
         priority: priorityList[randomInteger(0, priorityList.length - 1)],
         version: versionList[randomInteger(0, versionList.length - 1)],
-        status: taskStatusList[randomInteger(0, taskStatusList.length - 1)]
+        status: taskStatusList[randomInteger(0, taskStatusList.length - 1)],
+        show: true
       });
     }
 
@@ -54,5 +56,8 @@ export default {
   },
   getVersionList() {
     return versionList;
-  }
+  },
+  /*getFilterValues() {
+    return filterValues;
+  }*/
 }

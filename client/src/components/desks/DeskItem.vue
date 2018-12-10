@@ -19,14 +19,11 @@
 <script>
   // Components
   import taskList from '@/components/tasks/TaskList'
-  import modal from '@/components/forms/ModalForm';
-
 
   export default {
     name: 'desk-item',
     components: {
-      taskList,
-      modal
+      taskList
     },
     props: {
       desk: {
@@ -74,6 +71,14 @@
     },
     mounted: function () {
       this.refreshTaskListByStatus();
+    },
+    watch: {
+      desk: function () {
+        this.refreshTaskListByStatus();
+      },
+      statusList: function () {
+        this.refreshTaskListByStatus();
+      },
     }
   }
 </script>

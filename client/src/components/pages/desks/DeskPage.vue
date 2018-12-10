@@ -22,7 +22,7 @@
 
         </div>
 
-        <modal
+        <!--<modal
           v-show="isModalVisible"
           @close="closeModal"
           v-on:submit-form="addTask"
@@ -39,7 +39,7 @@
             </form>
           </template>
           <template slot="btn-text">Добавить</template>
-        </modal>
+        </modal>-->
 
       </div>
 
@@ -55,7 +55,7 @@
   import headerBlock from '@/components/Header'
   import footerBlock from '@/components/Footer'
   import taskList from '@/components/tasks/TaskList'
-  import modal from '@/components/forms/ModalForm';
+  // import modal from '@/components/forms/ModalForm';
 
   // Services
   import DesksService from '@/services/DesksService'
@@ -68,7 +68,7 @@
       taskList,
       headerBlock,
       footerBlock,
-      modal
+      // modal
     },
     data() {
       return {

@@ -14,11 +14,13 @@
   #app {
     color: #fff;
     font-size: 16px;
+    height: auto;
+    min-height: 100vh;
+    background: rgb(0, 174, 204);
+  }
+  #app * {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    width: 100vw;
-    min-width: 100vh;
-    background: rgb(0, 174, 204);
   }
 </style>
