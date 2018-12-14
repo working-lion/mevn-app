@@ -15,8 +15,6 @@ export const store = new Vuex.Store({
     priorities: Array,
     types: Array,
     users: Array,
-    // drag-drop
-    draggedTaskId: null,
   },
   getters: {
     STATUSES: state => {
@@ -39,9 +37,6 @@ export const store = new Vuex.Store({
     },
     USERS: state => {
       return state.users
-    },
-    DRAGGED_TASK_ID: state => {
-      return state.draggedTaskId;
     },
   },
   mutations: {
@@ -106,9 +101,6 @@ export const store = new Vuex.Store({
     // users
     SET_USERS: (state, users) => {
       state.users = users;
-    },
-    DRAGGED_TASK_ID: (state, taskId) => {
-      state.draggedTaskId = taskId;
     },
   },
   actions: {
@@ -178,14 +170,5 @@ export const store = new Vuex.Store({
         context.commit('SET_USERS', FileServices.getUserList());
       }
     },
-    SET_DRAGGED_TASK_ID: (context, taskId) => {
-      if (taskId) {
-        context.commit('DRAGGED_TASK_ID', taskId);
-      }
-      else {
-        context.commit('DRAGGED_TASK_ID', null);
-      }
-    },
-
   },
 });

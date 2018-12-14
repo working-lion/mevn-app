@@ -1,8 +1,7 @@
 <template>
   <div class="desks-list-container">
     <div class="desks-list">
-      <a
-        href=""
+      <a href=""
         class="desk-item"
         v-for="deskItem in desks"
         :key="deskItem._id"
@@ -16,8 +15,7 @@
           </ul>
         </span>
       </a>
-      <a
-        href="#"
+      <a href="#"
         class="add-desk"
         @click="showModal"
       >
@@ -26,10 +24,7 @@
         </div>
       </a>
     </div>
-
   </div>
-
-
 </template>
 
 <script>

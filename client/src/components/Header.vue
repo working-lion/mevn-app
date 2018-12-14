@@ -43,7 +43,7 @@
     color: #666;
   }
   .body {
-    padding-bottom: 58px;
+    padding-bottom: 38px;
     position: relative;
     min-height: 100vh;
   }

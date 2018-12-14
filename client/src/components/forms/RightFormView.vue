@@ -75,20 +75,20 @@
 </script>
 
 <style>
-  /*.modal-right {
+  .modal-right {
     color: #666;
     width: 0;
     min-width: 0;
     background: #dfe3e6;
     overflow: hidden;
-    transition: all 0.5s;
+    transition: all 0.3s;
   }
   .modal-right.active {
     width: 350px;
     min-width: 350px;
-    transition: all 0.5s;
-  }*/
-  .modal-right {
+    transition: all 0.3s;
+  }
+  /*.modal-right {
     color: #666;
     width: 350px;
     height: 100%;
@@ -102,7 +102,7 @@
   .modal-right.active {
     right: 0;
     transition: right 0.5s;
-  }
+  }*/
   .modal-right .modal-body {
     position: relative;
     padding: 0 10px 20px;

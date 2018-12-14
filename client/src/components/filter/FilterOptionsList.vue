@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
   // bus
   import { bus } from '@/main';
 

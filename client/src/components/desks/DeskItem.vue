@@ -1,11 +1,10 @@
 <template>
   <div class="desk-item">
-
     <div class="desk-header">
       <div class="desk-name" v-if="desk.hasOwnProperty('user')">{{ desk.user.name }}</div>
     </div>
-
     <div class="column-list" v-if="desk.hasOwnProperty('taskList') && desk.taskList.length > 0">
+
       <task-list
         v-for="(curTaskList, curTaskListIndex) in taskListByStatus"
         :key="curTaskListIndex"
@@ -13,8 +12,8 @@
         :userId="desk.user.id"
         :task-list="curTaskList"
       ></task-list>
-    </div>
 
+    </div>
   </div>
 </template>
 
@@ -42,12 +41,21 @@
       }
     },
     methods: {
+      /**
+       * Открывает модальное окно
+       */
       openModal() {
         this.isModalVisible = true;
       },
+      /**
+       * Закрывает модальное окно
+       */
       closeModal() {
         this.isModalVisible = false;
       },
+      /**
+       * Обновляет список задач по статусам
+       */
       refreshTaskListByStatus() {
 
         this.taskListByStatus = {};

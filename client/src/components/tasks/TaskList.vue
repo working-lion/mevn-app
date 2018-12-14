@@ -4,7 +4,7 @@
        @dragover="dragOver($event)"
        @dragenter="dragEnter"
        @dragleave="dragLeave"
-       @drop="drop"
+       @drop="drop($event)"
   >
     <div class="column-body">
       <div class="tasks-list"
@@ -15,6 +15,8 @@
           :key="task.id"
           v-if="task.show"
           :task="task"
+          v-on:drop-on="turnOnDropAvailable"
+          v-on:drop-off="turnOffDropAvailable"
         >
         </task-item>
 
@@ -56,57 +58,49 @@
           'drag-enter': false,
           'drop': false,
         },
+
+        isDropAvailable: true,
       }
     },
     methods: {
       openAddTaskModal() {
         this.$emit('open-modal');
       },
-      isTaskInList(taskId) {
-        if (!taskId || this.taskList.length === 0) {
-          return false;
-        }
-
-        for (let taskKey in this.taskList) {
-          if (this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === taskId) {
-            return true;
-          }
-        }
-
-        return false;
-      },
-
-      // drag-drop
       dragOver(e) {
+        // нужно, чтобы срабатывал drop
         e.preventDefault();
-        if (this.columnItemClasses['drag-enter'] === false) {
-          this.showPointer();
-        }
+        this.showPointer();
       },
       dragEnter() {},
       dragLeave() {
         this.hidePointer();
       },
-      drop() {
-        let draggedTaskId = this.$store.getters.DRAGGED_TASK_ID;
+      drop(e) {
+        let draggedTaskId = e.dataTransfer.getData("movedTaskId");
 
-        if (!this.isTaskInList(draggedTaskId)) {
-          bus.$emit('move-task', {listIndex: this.listIndex, userId: this.userId});
+        if (this.isDropAvailable) {
+          bus.$emit('move-task', {movedTaskId: draggedTaskId, listIndex: this.listIndex, userId: this.userId});
         }
 
         this.hidePointer();
       },
       showPointer() {
-        let draggedTaskId = this.$store.getters.DRAGGED_TASK_ID;
-
-        if (!this.isTaskInList(draggedTaskId)) {
+        if (this.isDropAvailable) {
           this.columnItemClasses['drag-enter'] = true;
         }
       },
       hidePointer() {
         this.columnItemClasses['drag-enter'] = false;
+      },
+      turnOnDropAvailable() {
+        console.log('ВКЛ');
+        this.isDropAvailable = true;
+      },
+      turnOffDropAvailable() {
+        console.log('ВЫКЛ');
+        this.isDropAvailable = false;
       }
-    }
+    },
   }
 </script>
 

@@ -55,7 +55,6 @@
   import ShowTaskRight from '@/components/forms/ShowTaskRight';
 
   // Services
-  import DesksService from '@/services/DesksService';
   import FileService from '@/services/FileService';
 
   export default {
@@ -82,25 +81,47 @@
       }
     },
     methods: {
+      /**
+       * Получает список статусов задач из хранилища
+       */
       getStatusList() {
         this.statusList = this.$store.getters.STATUSES;
       },
+      /**
+       * Получает список версий приложения из хранилища
+       */
       getVersionList() {
         this.versionList = this.$store.getters.VERSIONS;
       },
+      /**
+      * Получает список приоритетов задач из хранилища
+      * */
       getPriorityList() {
         this.priorityList = this.$store.getters.PRIORITIES;
       },
+      /**
+       * Получает список доступных фильтров из хранилища
+       * */
       initFilterList() {
         this.filterList = this.$store.getters.FILTERS;
       },
+      /**
+       * Получает список задач из хранилища
+       * */
       getTaskList() {
         this.taskList = this.$store.getters.TASKS;
       },
+      /**
+       * Получает список исполнителей из хранилища
+       * */
       getUserList() {
         this.userList = this.$store.getters.USERS;
         this.userList = this.$store.getters.USERS;
       },
+      /**
+       * Проверяет, есть ли в списке пользователь с данным id
+       * @param {number} userId - id исполнителя
+       * */
       checkDeskListUser(userId) {
         if (this.deskList.length === 0) {
           return false;
@@ -110,7 +131,7 @@
             if (this.deskList.hasOwnProperty(deskIndex)
               && this.deskList[deskIndex].hasOwnProperty('user')
               && this.deskList[deskIndex].user.hasOwnProperty('id')
-              && this.deskList[deskIndex].user.id === userId) {
+              && +this.deskList[deskIndex].user.id === +userId) {
               return true;
             }
           }
@@ -118,6 +139,9 @@
           return false;
         }
       },
+      /**
+       * Обновляет список досок по списку задач (разбиение по исполнителям и статусам)
+       * */
       getDeskList() {
         this.deskList = {};
 
@@ -149,6 +173,11 @@
           }
         }
       },
+      /**
+       * Проверяет, нужно ли показывать задачу, исходя из включенных фильтров
+       * @param {Object} task - задача
+       * @param {Object} activeGroupsFilters - фильтры
+       */
       isShownTask(task, activeGroupsFilters) {
         const GROUP_ID_KEY = 'id';
         const needToShow = Object
@@ -191,6 +220,10 @@
           task.show = this.isShownTask(task, activeGroupsFilters);
         }
       },
+      /**
+       * Изменяет данные задачи
+       * @param {Object} task - задача
+       */
       editTask(task) {
         for (const taskKey in this.taskList) {
           if (this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === task.id) {
@@ -205,19 +238,24 @@
           }
         }
 
-        /*
-        * TODO: по идее должен срабатывать watch за taskList, не срабатывает, поэтому вызываем обновление стола
-        * */
         this.toggleTasksShow();
         this.getDeskList();
       },
+      /**
+       * Добавляет новую задачи в список задач
+       * @param {Object} newTask - задача
+       */
       addNewTask(newTask) {
         // в реальном приложении id и номер нужно получать из БД
         newTask.id = this.getNewTaskId();
-        newTask.number = this.getRandom();
+        newTask.number = 'ATGSM-' + this.getRandom(0, 1000);
 
         this.taskList.push(newTask);
       },
+      /**
+       * Определяет случайный id новой задачи (в рабочей версии id задачи необходимо получать из БД)
+       * @returns {number}
+       */
       getNewTaskId() {
         let newTaskId;
 
@@ -228,15 +266,27 @@
 
         return newTaskId;
       },
-      setDraggableTaskId(id) {
-        this.draggableTaskId = id;
-      },
+      /**
+       * Вычисляет случайное число
+       * @param {number} min - минимум
+       * @param {number} max - максимум
+       * @returns {number}
+       */
       getRandom(min, max) {
         if (min === undefined || max === undefined) {
           return null;
         }
-        return Math.random() * (max - min) + min;
+
+        let rand = min + Math.random() * (max + 1 - min);
+        rand = Math.floor(rand);
+
+        return rand;
       },
+      /**
+       * Проверяет, если ли в списке задач задача с передаваемым id
+       * @param {number} id - id задачи
+       * @returns {boolean}
+       */
       checkTaskRandomId(id) {
         for (let taskKey in this.taskList) {
           if(this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === id) {
@@ -245,47 +295,55 @@
         }
         return true;
       },
+      /**
+       * Обновляет данные задачи (срабатывает при перетаскивании задачи в другой стоблец)
+       * @param {Object} taskData - данные задачи (id, статус, исполнитель)
+       * @returns {boolean}
+       */
       moveTask(taskData) {
 
-        console.log('move task');
-
-        let statusIndex = taskData.listIndex;
-        let userId = taskData.userId;
-        let draggedTaskId = this.$store.getters.DRAGGED_TASK_ID;
+        let draggedTaskId = taskData.movedTaskId,
+          statusIndex = taskData.listIndex,
+          userId = taskData.userId;
 
         let curStatus = this.getStatusByIndex(statusIndex - 1);
         let curUser;
 
         if (!curStatus) {
           // нет статуса
+          console.log('Ошибка! Не найден статус');
           return false;
         }
 
-        // get user data
         curUser = this.getUserById(userId);
 
         if (!curUser) {
           // нет юзера
+          console.log('Ошибка! Не найден исполнитель');
           return false;
         }
 
         for (let taskKey in this.taskList) {
-          if (this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === draggedTaskId) {
+          if (this.taskList.hasOwnProperty(taskKey) && +this.taskList[taskKey].id === +draggedTaskId) {
 
             this.taskList[taskKey].user = curUser;
             this.taskList[taskKey].status = curStatus;
 
-            /*
-            * TODO: по идее должен срабатывать watch за taskList, не срабатывает, поэтому вызываем обновление стола
-            * */
             this.toggleTasksShow();
             this.getDeskList();
 
-            console.log('Обновили');
+            return true;
           }
         }
 
+        return false;
+
       },
+      /**
+       * Получает данные о статусе по id статуса
+       * @param {number} statusIndex - индекс статуса в массиве статусов
+       * @returns {Object | null}
+       */
       getStatusByIndex(statusIndex) {
         if (this.statusList.hasOwnProperty([statusIndex])) {
           return this.statusList[statusIndex];
@@ -293,6 +351,11 @@
 
         return null;
       },
+      /**
+       * Получает данные об исполнителе по его id
+       * @param {number} userId - id исполнителя
+       * @returns {Object | null}
+       */
       getUserById(userId) {
         if (this.userList.length > 0) {
 
@@ -305,9 +368,15 @@
           return null;
         }
       },
+      /**
+       * Открывает форму, расположенную на правой стороне
+       */
       showRightForm() {
         this.isRightFormActive = true;
       },
+      /**
+       * Закрывает форму, расположенную на правой стороне
+       */
       hideRightForm() {
         this.isRightFormActive = false;
       }
@@ -320,9 +389,6 @@
       this.initFilterList();
       this.getTaskList();
 
-      /*
-      * TODO: при этом событии обновляется фильтр лист. Это какая-то внутренняя реактивность?
-      * */
       // bus
       bus.$on('apply-filter', () => {
         this.toggleTasksShow();
@@ -333,9 +399,6 @@
       bus.$on('add-new-task', (newTask) => {
         this.addNewTask(newTask);
       });
-      /*bus.$on('set-drag-task', (id) => {
-        this.setDraggableTaskId(id);
-      });*/
       bus.$on('move-task', (taskData) => {
         this.moveTask(taskData);
       });
@@ -358,14 +421,16 @@
   .desk-container {
     position: relative;
     overflow-x: hidden;
+    display: flex;
   }
   .desk-list-container {
-    max-width: 100%;
-    transition: max-width 0.3s;
+    min-width: 100%;
+    transition: min-width 0.3s;
+    padding-bottom: 10px;
   }
   .desk-container.active .desk-list-container {
-    max-width: calc(100% - 350px);
-    transition: max-width 0.3s;
+    min-width: calc(100% - 350px);
+    transition: min-width 0.3s;
   }
   .status-list {
     margin: 0;

@@ -4,8 +4,8 @@
        v-if="task.hasOwnProperty('id') && task.id"
        draggable="true"
 
-       @dragstart="dragStart"
-       @dragend="dragEnd"
+       @dragstart="dragStart($event)"
+       @dragend="dragEnd($event)"
   >
     <!-- @drag="drag" -->
     <div class="task-item-header">
@@ -62,23 +62,18 @@
         bus.$emit('open-task-right', this.task);
       },
 
-      // drag-drop
-/*      drag() {
-        this.classes['drag-on'] = true;
-      },
-      drop() {
-        this.classes['drag-on'] = false;
-      },*/
-      dragStart() {
-        this.$store.dispatch('SET_DRAGGED_TASK_ID', this.task.id);
-        // bus.$emit('set-drag-task', this.task.id);
+      dragStart(e) {
+        e.dataTransfer.setData('movedTaskId', this.task.id);
 
-        // приколюхи с перетаскиванием
+        this.$emit('drop-off');
+
         this.classes['drag-on'] = true;
       },
       dragEnd() {
         this.classes['drag-on'] = false;
-      }
+
+        this.$emit('drop-on');
+      },
     }
   }
 </script>

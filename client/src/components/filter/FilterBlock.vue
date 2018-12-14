@@ -9,7 +9,6 @@
     ></filter-options-list>
 
       <span class="filter-clear" @click="clearFilter" title="Очистить фильтр">&times;</span>
-
   </div>
 </template>
 
@@ -34,11 +33,16 @@
       }
     },
     methods: {
+      /**
+       * Получает фильтры из хранилища
+       */
       getFilters() {
         this.filterList = this.$store.getters.FILTERS;
       },
+      /**
+       * Очищает фильтры
+       */
       clearFilter () {
-
         for (let optionKey in this.filterList) {
           if (this.filterList.hasOwnProperty(optionKey)) {
 
