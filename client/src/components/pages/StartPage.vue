@@ -6,7 +6,7 @@
     ></header-block>
 
     <div class="content">
-      <div class="desk-container">
+      <div class="desk-container" :class="{active: isRightFormActive}">
         <div class="desk-list-container">
           <div class="status-list-block">
             <ul class="status-list">
@@ -28,6 +28,7 @@
           </div>
         </div>
 
+        <!--Форма показа / редактирования задачи -->
         <show-task-right></show-task-right>
 
       </div>
@@ -35,18 +36,14 @@
 
     <footer-block></footer-block>
 
-    <!--Форма редактирования задачи -->
+    <!--Форма добавления задачи -->
 
-    <!--<edit-task-form
-      :task="taskList[0]"
-      v-show="isEditTaskModalVisible"
-    ></edit-task-form>-->
+    <add-task-form></add-task-form>
 
   </div>
 </template>
 
 <script>
-
   // bus
   import {bus} from '@/main';
 
@@ -54,7 +51,7 @@
   import headerBlock from '@/components/Header';
   import footerBlock from '@/components/Footer';
   import DeskItem from '@/components/desks/DeskItem';
-  import EditTaskForm from '@/components/forms/EditTaskForm';
+  import AddTaskForm from '@/components/forms/AddTaskForm';
   import ShowTaskRight from '@/components/forms/ShowTaskRight';
 
   // Services
@@ -67,21 +64,21 @@
       headerBlock,
       footerBlock,
       DeskItem,
-      EditTaskForm,
+      AddTaskForm,
       ShowTaskRight,
     },
     data() {
       return {
         taskList: [],
+        userList: [],
         statusList: [],
         versionList: [],
         priorityList: [],
-
-        // тянется из vuex; нужен, чтобы обновлять видимые задачи
         filterList: {},
         deskList: {},
-
         isEditTaskModalVisible: false,
+        draggableTaskId: null,
+        isRightFormActive: false,
       }
     },
     methods: {
@@ -99,6 +96,10 @@
       },
       getTaskList() {
         this.taskList = this.$store.getters.TASKS;
+      },
+      getUserList() {
+        this.userList = this.$store.getters.USERS;
+        this.userList = this.$store.getters.USERS;
       },
       checkDeskListUser(userId) {
         if (this.deskList.length === 0) {
@@ -209,12 +210,110 @@
         * */
         this.toggleTasksShow();
         this.getDeskList();
+      },
+      addNewTask(newTask) {
+        // в реальном приложении id и номер нужно получать из БД
+        newTask.id = this.getNewTaskId();
+        newTask.number = this.getRandom();
 
+        this.taskList.push(newTask);
+      },
+      getNewTaskId() {
+        let newTaskId;
 
+        do {
+          newTaskId = this.getRandom(0, 1000);
+        }
+        while (!this.checkTaskRandomId(newTaskId))
+
+        return newTaskId;
+      },
+      setDraggableTaskId(id) {
+        this.draggableTaskId = id;
+      },
+      getRandom(min, max) {
+        if (min === undefined || max === undefined) {
+          return null;
+        }
+        return Math.random() * (max - min) + min;
+      },
+      checkTaskRandomId(id) {
+        for (let taskKey in this.taskList) {
+          if(this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === id) {
+            return false;
+          }
+        }
+        return true;
+      },
+      moveTask(taskData) {
+
+        console.log('move task');
+
+        let statusIndex = taskData.listIndex;
+        let userId = taskData.userId;
+        let draggedTaskId = this.$store.getters.DRAGGED_TASK_ID;
+
+        let curStatus = this.getStatusByIndex(statusIndex - 1);
+        let curUser;
+
+        if (!curStatus) {
+          // нет статуса
+          return false;
+        }
+
+        // get user data
+        curUser = this.getUserById(userId);
+
+        if (!curUser) {
+          // нет юзера
+          return false;
+        }
+
+        for (let taskKey in this.taskList) {
+          if (this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === draggedTaskId) {
+
+            this.taskList[taskKey].user = curUser;
+            this.taskList[taskKey].status = curStatus;
+
+            /*
+            * TODO: по идее должен срабатывать watch за taskList, не срабатывает, поэтому вызываем обновление стола
+            * */
+            this.toggleTasksShow();
+            this.getDeskList();
+
+            console.log('Обновили');
+          }
+        }
+
+      },
+      getStatusByIndex(statusIndex) {
+        if (this.statusList.hasOwnProperty([statusIndex])) {
+          return this.statusList[statusIndex];
+        }
+
+        return null;
+      },
+      getUserById(userId) {
+        if (this.userList.length > 0) {
+
+          for (let userKey in this.userList) {
+            if (this.userList.hasOwnProperty(userKey) && this.userList[userKey].id === userId) {
+              return this.userList[userKey];
+            }
+          }
+
+          return null;
+        }
+      },
+      showRightForm() {
+        this.isRightFormActive = true;
+      },
+      hideRightForm() {
+        this.isRightFormActive = false;
       }
-    }
-    ,
+    },
     created: function () {
+      this.getUserList();
       this.getStatusList();
       this.getVersionList();
       this.getPriorityList();
@@ -231,10 +330,24 @@
       bus.$on('edit-task', (task) => {
         this.editTask(task);
       });
+      bus.$on('add-new-task', (newTask) => {
+        this.addNewTask(newTask);
+      });
+      /*bus.$on('set-drag-task', (id) => {
+        this.setDraggableTaskId(id);
+      });*/
+      bus.$on('move-task', (taskData) => {
+        this.moveTask(taskData);
+      });
+      bus.$on('open-task-right', () => {
+        this.showRightForm();
+      });
+      bus.$on('close-right-form', () => {
+        this.hideRightForm();
+      });
     },
     watch: {
       taskList: function () {
-        console.log('Изменили задачи');
         this.getDeskList();
       }
     }
@@ -243,7 +356,16 @@
 
 <style>
   .desk-container {
-    display: flex;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .desk-list-container {
+    max-width: 100%;
+    transition: max-width 0.3s;
+  }
+  .desk-container.active .desk-list-container {
+    max-width: calc(100% - 350px);
+    transition: max-width 0.3s;
   }
   .status-list {
     margin: 0;

@@ -62,6 +62,7 @@
       close() {
         this.$emit('close-task-right');
         this.task = {}
+        bus.$emit('close-right-form');
       },
       submitForm() {
         this.$emit('submit-form');
@@ -74,7 +75,7 @@
 </script>
 
 <style>
-  .modal-right {
+  /*.modal-right {
     color: #666;
     width: 0;
     min-width: 0;
@@ -86,6 +87,21 @@
     width: 350px;
     min-width: 350px;
     transition: all 0.5s;
+  }*/
+  .modal-right {
+    color: #666;
+    width: 350px;
+    height: 100%;
+    background: #dfe3e6;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: -400px;
+    transition: right 0.5s;
+  }
+  .modal-right.active {
+    right: 0;
+    transition: right 0.5s;
   }
   .modal-right .modal-body {
     position: relative;
@@ -206,6 +222,7 @@
   }
   .form-row input:focus,
   .form-row textarea:focus,
+  .form-row select:focus,
   .form-row [type="submit"]:hover {
     box-shadow: 1px 1px 3px 0 rgba(153, 153, 153, 1);
   }
@@ -224,5 +241,8 @@
     font-size: 14px;
     display: block;
     margin-bottom: 5px;
+  }
+  .error {
+    border-color: red !important;
   }
 </style>

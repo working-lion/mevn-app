@@ -170,11 +170,16 @@
   }
   .btn-close {
     font-size: 20px;
-    line-height: 1;
+    line-height: 12px;
+    vertical-align: middle;
+    text-align: center;
     cursor: pointer;
     font-weight: bold;
     color: #4AAE9B;
     padding: 0;
+    display: block;
+    width: 12px;
+    height: 12px;
     background: transparent;
     position: absolute;
     top: 10px;
@@ -188,5 +193,8 @@
     background: #4AAE9B;
     border: 1px solid #4AAE9B;
     border-radius: 2px;
+  }
+  .error {
+    border-color: red !important;
   }
 </style>

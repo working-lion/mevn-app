@@ -1,8 +1,15 @@
 <template>
 
-  <div class="column-item">
+  <div :class="columnItemClasses"
+       @dragover="dragOver($event)"
+       @dragenter="dragEnter"
+       @dragleave="dragLeave"
+       @drop="drop"
+  >
     <div class="column-body">
-      <div class="tasks-list">
+      <div class="tasks-list"
+
+      >
         <task-item
           v-for="task in taskList"
           :key="task.id"
@@ -10,15 +17,20 @@
           :task="task"
         >
         </task-item>
+
+        <div class="pointer"></div>
       </div>
     </div>
-    <div class="column-footer">
+    <!--<div class="column-footer">
       <a href="#" class="add-task" @click="openAddTaskModal">Добавить карточку</a>
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script>
+  // bus
+  import {bus} from '@/main';
+
   // components
   import taskItem from '@/components/tasks/Task'
 
@@ -33,11 +45,66 @@
     props: {
       taskList: {
         type: Array
+      },
+      listIndex: null,
+      userId: null,
+    },
+    data() {
+      return {
+        columnItemClasses: {
+          'column-item': true,
+          'drag-enter': false,
+          'drop': false,
+        },
       }
     },
     methods: {
       openAddTaskModal() {
         this.$emit('open-modal');
+      },
+      isTaskInList(taskId) {
+        if (!taskId || this.taskList.length === 0) {
+          return false;
+        }
+
+        for (let taskKey in this.taskList) {
+          if (this.taskList.hasOwnProperty(taskKey) && this.taskList[taskKey].id === taskId) {
+            return true;
+          }
+        }
+
+        return false;
+      },
+
+      // drag-drop
+      dragOver(e) {
+        e.preventDefault();
+        if (this.columnItemClasses['drag-enter'] === false) {
+          this.showPointer();
+        }
+      },
+      dragEnter() {},
+      dragLeave() {
+        this.hidePointer();
+      },
+      drop() {
+        let draggedTaskId = this.$store.getters.DRAGGED_TASK_ID;
+
+        if (!this.isTaskInList(draggedTaskId)) {
+          bus.$emit('move-task', {listIndex: this.listIndex, userId: this.userId});
+        }
+
+        this.hidePointer();
+      },
+      showPointer() {
+        let draggedTaskId = this.$store.getters.DRAGGED_TASK_ID;
+
+        if (!this.isTaskInList(draggedTaskId)) {
+          this.columnItemClasses['drag-enter'] = true;
+        }
+      },
+      hidePointer() {
+        this.columnItemClasses['drag-enter'] = false;
       }
     }
   }
@@ -52,6 +119,7 @@
     margin: 0 5px;
     flex-grow: 1;
     flex-basis: 100%;
+    min-height: 60px;
   }
   .add-task {
     display: block;
@@ -71,5 +139,15 @@
     position: absolute;
     left: 0;
     top: 0;
+  }
+  .pointer {
+    height: 50px;
+    background: #bbb url('../../assets/down-arrow.png') center no-repeat;
+    background-size: auto;
+    border-radius: 3px;
+    display: none;
+  }
+  .drag-enter .pointer {
+    display: block;
   }
 </style>

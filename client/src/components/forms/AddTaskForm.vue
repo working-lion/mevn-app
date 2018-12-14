@@ -1,94 +1,38 @@
 <template>
 
-  <right-form-view
-    :showSubmitRow="!isViewMode"
-    :isActive="isActive"
-    v-on:close-task-right="close"
-    v-on:submit-form="saveTask"
-    v-on:cancel="cancel"
-  >
+  <modal-form-view v-if="isActive" v-on:submit-form="saveTask" v-on:close="close">
 
-    <template slot="menu" v-if="isViewMode">
-      <div class="menu-open-btn">
-        <span class="menu-open-btn-circle"></span>
-        <ul class="right-form-menu">
-          <li @click="turnOnEditTaskMode">Редактировать</li>
-        </ul>
-      </div>
+    <template slot="header">
+      Добавить задачу <b>{{ formData.number }}</b>
     </template>
 
-    <!-- Вывод данных задачи -->
-
-    <template slot="header" v-if="isViewMode">
-      {{ task.title }}
-    </template>
-
-    <template slot="body" v-if="isViewMode">
-      <div class="data-group">
-        <div class="data-group-title">Подробная информация</div>
-        <div class="data-row" v-if="task.priority.name">
-          <div class="data-row-title">Приоритет:</div>
-          <div class="data-row-value">{{ task.priority.name }}</div>
-        </div>
-        <div class="data-row" v-if="task.type.name">
-          <div class="data-row-title">Тип:</div>
-          <div class="data-row-value">{{ task.type.name }}</div>
-        </div>
-        <div class="data-row" v-if="task.version.name">
-          <div class="data-row-title">Версия:</div>
-          <div class="data-row-value">{{ task.version.name }}</div>
-        </div>
-        <div class="data-row" v-if="task.status.name">
-          <div class="data-row-title">Статус:</div>
-          <div class="data-row-value">{{ task.status.name }}</div>
-        </div>
-      </div>
-      <div class="data-group">
-        <div class="data-group-title">Иполнитель</div>
-        <div class="data-row data-row-100" v-if="task.user.name">
-          <div class="data-row-value">{{ task.user.name }}</div>
-        </div>
-      </div>
-
-      <div class="data-group">
-        <div class="data-group-title">Описание</div>
-        <div class="data-row data-row-100" v-if="task.description">
-          <div class="data-row-value">{{ task.description }}</div>
-        </div>
-      </div>
-    </template>
-
-    <!-- Редактирвоание данных задачи -->
-    <template slot="header" v-if="!isViewMode">
-      Редактирование задачи {{ task.number }}
-    </template>
-
-    <template slot="body" v-if="!isViewMode">
+    <template slot="body">
       <form>
         <div class="form-row">
           <label for="edit-task-title">Название:</label>
           <input id="edit-task-title"
                  type="text"
                  v-model="formData.title"
-                 @change="validateFormData"
                  :class="{error: errors.hasOwnProperty('title')}"
+                 @change="validateFormData"
           >
         </div>
         <div class="form-row">
           <label for="edit-task-deskr">Описание:</label>
           <textarea id="edit-task-deskr"
                     v-model="formData.description"
-                    @change="validateFormData"
                     :class="{error: errors.hasOwnProperty('description')}"
-          ></textarea>
+                    @change="validateFormData"
+          >
+          </textarea>
         </div>
         <div class="form-row-2">
           <div class="form-row">
             <label for="edit-task-priority">Приоритет:</label>
             <select id="edit-task-priority"
                     v-model="formData.priority"
-                    @change="validateFormData"
                     :class="{error: errors.hasOwnProperty('priority')}"
+                    @change="validateFormData"
             >
               <option v-for="priorityItem in priorities">{{ priorityItem.name }}</option>
             </select>
@@ -97,8 +41,8 @@
             <label for="edit-task-type">Тип:</label>
             <select id="edit-task-type"
                     v-model="formData.type"
-                    @change="validateFormData"
                     :class="{error: errors.hasOwnProperty('type')}"
+                    @change="validateFormData"
             >
               <option v-for="typeItem in types">{{ typeItem.name }}</option>
             </select>
@@ -109,8 +53,8 @@
             <label for="edit-task-version">Версия продукта:</label>
             <select id="edit-task-version"
                     v-model="formData.version"
-                    @change="validateFormData"
                     :class="{error: errors.hasOwnProperty('version')}"
+                    @change="validateFormData"
             >
               <option v-for="versionItem in versions">{{ versionItem.name }}</option>
             </select>
@@ -119,8 +63,8 @@
             <label for="edit-task-status">Статус:</label>
             <select id="edit-task-status"
                     v-model="formData.status"
-                    @change="validateFormData"
                     :class="{error: errors.hasOwnProperty('status')}"
+                    @change="validateFormData"
             >
               <option v-for="statusItem in statuses">{{ statusItem.name }}</option>
             </select>
@@ -130,8 +74,8 @@
           <label for="edit-task-user">Исполнитель:</label>
           <select id="edit-task-user"
                   v-model="formData.user"
-                  @change="validateFormData"
                   :class="{error: errors.hasOwnProperty('user')}"
+                  @change="validateFormData"
           >
             <option v-for="userItem in users">{{ userItem.name }}</option>
           </select>
@@ -139,11 +83,9 @@
       </form>
     </template>
 
-    <template slot="btn-text" v-if="!isViewMode">
-      Сохранить
-    </template>
+    <template slot="btn-text">Сохранить</template>
 
-  </right-form-view>
+  </modal-form-view>
 
 </template>
 
@@ -152,42 +94,43 @@
   import {bus} from '@/main';
 
   // components
-  import rightFormView from '@/components/forms/RightFormView';
+  import ModalFormView from '@/components/forms/ModalFormView';
 
   export default {
-    name: 'show-task-right',
+    name: 'add-task-form',
     components: {
-      rightFormView
+      ModalFormView
     },
     data() {
       return {
         task: {},
+        // служит для очистки формы
         defaultTask: {
-          description: "Введите описание",
+          description: '',
           id: 1,
-          number: "ATGSM-000",
+          number: 'ATGSM-999',
           priority: {
-            name: 'Выберите приоритет',
+            name: '',
           },
           show: true,
           status: {
-            name: 'Выберите статус',
+            name: '',
           },
-          title: "Заполните заголовок",
+          title: '',
           type: {
-            name: 'Выберите тип',
+            name: '',
           },
           user: {
-            name: 'Выберите исполнителя',
+            name: '',
           },
           version: {
-            name: 'Выберите версию',
+            name: '',
           }
         },
         // без начальной инициаллизации не привязывается форма
         formData: {
-          id: null,
-          number: null,
+          id: 1,
+          number: 'ATGSM-999',
           title: null,
           description: null,
           status: null,
@@ -203,15 +146,26 @@
         types: {},
         users: [],
 
-        isActive: false,
-        isViewMode: true,
-
         errors: {},
         turnOnValidation: false,
 
+        isActive: false,
       }
     },
     methods: {
+      close() {
+        this.isActive = false;
+        this.initTaskDefault();
+        this.initFormData();
+        this.clearErrors();
+      },
+      open() {
+        this.isActive = true;
+      },
+      submitForm() {
+        // this.$emit('submit-form');
+        console.log('Отправить форму');
+      },
       getStatusList() {
         this.statuses = this.$store.getters.STATUSES;
       },
@@ -227,18 +181,6 @@
       getUserList() {
         this.users = this.$store.getters.USERS;
       },
-      open() {
-        this.isActive = true;
-      },
-      close() {
-        this.isViewMode = true;
-        this.isActive = false;
-      },
-      turnOnEditTaskMode() {
-        this.initData();
-        this.initFormData();
-        this.isViewMode = false;
-      },
       initData() {
         this.getTypeList();
         this.getStatusList();
@@ -247,7 +189,6 @@
         this.getUserList();
       },
       initFormData() {
-
         Object.keys(this.task)
           .reduce((memo, propKey) => {
 
@@ -279,10 +220,13 @@
 
         this.turnOnValidation = true;
 
-        let newTask = {};
-        let propField = null;
-
+        /*
+        * TODO: нужно генерировать ID задачи и номер
+        * */
         if (this.validateFormData()) {
+
+          let newTask = {};
+          let propField = null;
 
           Object.keys(this.task)
             .reduce((memo, propKey) => {
@@ -321,22 +265,25 @@
 
           this.initTask(newTask);
 
-          bus.$emit('edit-task', newTask);
+          bus.$emit('add-new-task', newTask);
 
-          this.isViewMode = true;
+          // очищаем форму
+          this.initTaskDefault();
+          this.initFormData();
+
+          this.close();
         }
-      },
-      cancel() {
-        this.isViewMode = true;
-        this.clearErrors();
+
       },
       validateFormData() {
+
         this.errors = {};
 
         if (this.turnOnValidation) {
 
           for (let propKey in this.formData) {
             if (this.formData.hasOwnProperty(propKey) && !this.formData[propKey]) {
+
               this.errors[propKey] = true;
             }
           }
@@ -356,77 +303,14 @@
       }
     },
     created: function () {
-      bus.$on('open-task-right', (curTask) => {
-        this.isViewMode = true;
-        this.initTask(curTask);
+      bus.$on('open-add-task-form', () => {
+        this.initTaskDefault();
         this.open();
       });
 
-      this.initTaskDefault();
       this.initData();
+      this.initTaskDefault();
       this.initFormData();
-    },
+    }
   }
 </script>
-
-<style>
-  .menu-open-btn {
-    padding: 2px 10px;
-    display: none;
-  }
-  .right-form-block:hover .menu-open-btn {
-    display: block;
-  }
-  .menu-open-btn-circle, .menu-open-btn-circle::before, .menu-open-btn-circle::after {
-    display: block;
-    width: 5px;
-    height: 5px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 50%;
-    position: relative;
-  }
-  .menu-open-btn:hover .menu-open-btn-circle,
-  .menu-open-btn:hover .menu-open-btn-circle::before,
-  .menu-open-btn:hover .menu-open-btn-circle::after {
-    background: rgba(0, 0, 0, 1);
-  }
-  .menu-open-btn-circle::before, .menu-open-btn-circle::after {
-    content: '';
-    position: absolute;
-    top: 0;
-  }
-  .menu-open-btn-circle::before {
-    left: -8px;
-  }
-  .menu-open-btn-circle::after {
-    right: -8px;
-  }
-  .right-form-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    border-radius: 3px;
-    padding: 10px;
-    margin: 0;
-    display: none;
-    list-style: none;
-    width: 120px;
-    background: #f1f1f1;
-    border: 1px solid rgb(0, 174, 204);
-  }
-  .right-form-menu li {
-    font-size: 13px;
-    padding-left: 0;
-    margin-bottom: 5px;
-    transition: padding 0.3s;
-    cursor: pointer;
-    text-transform: lowercase;
-  }
-  .right-form-menu li:hover {
-    color: rgb(0, 174, 204);
-    padding-left: 3px;
-  }
-  .menu-open-btn:hover .right-form-menu {
-    display: block;
-  }
-</style>

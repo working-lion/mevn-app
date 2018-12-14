@@ -9,6 +9,8 @@
       <task-list
         v-for="(curTaskList, curTaskListIndex) in taskListByStatus"
         :key="curTaskListIndex"
+        :listIndex="curTaskListIndex"
+        :userId="desk.user.id"
         :task-list="curTaskList"
       ></task-list>
     </div>

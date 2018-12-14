@@ -1,15 +1,23 @@
 <template>
-  <div class="task-item" :data-id="task.id" v-if="task.hasOwnProperty('id') && task.id">
+  <div :class="classes"
+       :data-id="task.id"
+       v-if="task.hasOwnProperty('id') && task.id"
+       draggable="true"
+
+       @dragstart="dragStart"
+       @dragend="dragEnd"
+  >
+    <!-- @drag="drag" -->
     <div class="task-item-header">
       <div class="task-item-number" @click="taskClickHandler">{{ task.number }}</div>
       <div class="task-item-name">{{ task.title }}</div>
-      <span class="task-item-menu-btn">
+      <!--<span class="task-item-menu-btn">
         <span class="task-item-menu-circle"></span>
         <ul class="task-item-menu">
           <li>редактировать</li>
           <li>удалить</li>
         </ul>
-      </span>
+      </span>-->
 
     </div>
     <div class="task-item-footer">
@@ -41,9 +49,35 @@
         default: {}
       }
     },
+    data() {
+      return {
+        classes: {
+          'task-item': true,
+          'drag-on': false
+        }
+      }
+    },
     methods: {
-      taskClickHandler(){
+      taskClickHandler() {
         bus.$emit('open-task-right', this.task);
+      },
+
+      // drag-drop
+/*      drag() {
+        this.classes['drag-on'] = true;
+      },
+      drop() {
+        this.classes['drag-on'] = false;
+      },*/
+      dragStart() {
+        this.$store.dispatch('SET_DRAGGED_TASK_ID', this.task.id);
+        // bus.$emit('set-drag-task', this.task.id);
+
+        // приколюхи с перетаскиванием
+        this.classes['drag-on'] = true;
+      },
+      dragEnd() {
+        this.classes['drag-on'] = false;
       }
     }
   }
@@ -55,6 +89,7 @@
     border-radius: 3px;
     margin: 5px 0;
     padding: 5px;
+    cursor: grab;
   }
   .task-item-header {
     position: relative;
@@ -136,5 +171,11 @@
   }
   .task-item-menu-circle::after {
     right: -8px;
+  }
+
+  /*drag-drop*/
+  .task-item.drag-on {
+    background: #dbdbdb;
+    cursor: grabbing;
   }
 </style>
