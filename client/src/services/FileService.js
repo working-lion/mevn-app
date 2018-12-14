@@ -1,14 +1,19 @@
 /*
 * Методы получения json-объектов из файлов
+* имитация получения данных из БД
 * */
+
 import userList from '@/db_json/user_list';
 import priorityList from '@/db_json/priority_list';
 import taskStatusList from '@/db_json/task_status_list';
 import taskTypeList from '@/db_json/task_type_list';
 import versionList from '@/db_json/version_list';
-// import filterValues from '@/db_json/filter_values_list';
 
 export default {
+  /**
+   * Формирует список задач
+   * @returns {Array}
+   */
   getTaskList() {
     let taskList = [],
       taskCount = 20,
@@ -42,22 +47,34 @@ export default {
 
     return taskList;
   },
+  /**
+   * Возвращает список исполнителей из файла
+   */
   getUserList() {
     return userList;
   },
+  /**
+   * Возвращает список приоритетов из файла
+   */
   getPriorityList() {
     return priorityList;
   },
+  /**
+   * Возвращает список статусов задач из файла
+   */
   getTaskStatusList() {
     return taskStatusList;
   },
+  /**
+   * Возвращает список типов задач из файла
+   */
   getTaskTypeList() {
     return taskTypeList;
   },
+  /**
+   * Возвращает список версий приложения из файла
+   */
   getVersionList() {
     return versionList;
   },
-  /*getFilterValues() {
-    return filterValues;
-  }*/
 }

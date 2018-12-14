@@ -9,7 +9,7 @@
           v-model="filterItem.isActive"
           :id="filterItem.id"
           :checked="filterItem.isActive"
-          v-on:change="itemClickHandler(filterItem)"
+          v-on:change="itemClickHandler()"
         />
         <label :for="filterItem.id">{{ filterItem.name }}</label>
       </div>
@@ -29,15 +29,7 @@
       },
     },
     methods: {
-      itemClickHandler(filterItem) {
-
-        /*
-        * TODO: Почему это работает без обновления филтров во vuex?
-        * */
-        // по идее тут мы должны обновлять filterItem во vuex
-        //this.$store.dispatch('RUN_UPDATE_FILTERS_ITEM', filterItem);
-        //this.$emit('update-filter');
-
+      itemClickHandler() {
         bus.$emit('apply-filter');
       }
     }

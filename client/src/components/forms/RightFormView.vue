@@ -49,8 +49,6 @@
 <script>
   // bus
   import {bus} from '@/main';
-  // если назвать компонент modal-right-view  -  будет ошибка:
-  // Unknown custom element: <modal-right-view> - did you register the component correctly?
 
   export default {
     name: 'right-form-view',
@@ -59,14 +57,23 @@
       isActive: Boolean
     },
     methods: {
+      /**
+       * Кидает события закрытия формы, очищает текущую задачу
+       */
       close() {
         this.$emit('close-task-right');
         this.task = {}
         bus.$emit('close-right-form');
       },
+      /**
+       * Кидает событие отправки формы
+       */
       submitForm() {
         this.$emit('submit-form');
       },
+      /**
+       * кидает событие отмены
+       */
       cancel() {
         this.$emit('cancel');
       },
@@ -88,21 +95,6 @@
     min-width: 350px;
     transition: all 0.3s;
   }
-  /*.modal-right {
-    color: #666;
-    width: 350px;
-    height: 100%;
-    background: #dfe3e6;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    right: -400px;
-    transition: right 0.5s;
-  }
-  .modal-right.active {
-    right: 0;
-    transition: right 0.5s;
-  }*/
   .modal-right .modal-body {
     position: relative;
     padding: 0 10px 20px;
@@ -182,12 +174,12 @@
   .modal-btn:hover {
     text-decoration: underline;
   }
-  .btn-green {
+  .modal-btn.btn-green {
     background: #4AAE9B;
     border: 1px solid #4AAE9B;
     border-radius: 2px;
   }
-  .btn-blue {
+  .modal-btn.btn-blue {
     background: rgb(0, 174, 204);
     border: 1px solid rgb(0, 174, 204);
     border-radius: 2px;

@@ -212,33 +212,60 @@
       }
     },
     methods: {
+      /**
+       * Получает список статусов задач из хранилища
+       */
       getStatusList() {
         this.statuses = this.$store.getters.STATUSES;
       },
+      /**
+       * Получает список версий из хранилища
+       */
       getVersionList() {
         this.versions = this.$store.getters.VERSIONS;
       },
+      /**
+       * ПОлучает список приоритетов задач из хранилища
+       */
       getPriorityList() {
         this.priorities = this.$store.getters.PRIORITIES;
       },
+      /**
+       * Получает список типов задач из хранилища
+       */
       getTypeList() {
         this.types = this.$store.getters.TYPES;
       },
+      /**
+       * Получает список исполнителей из хранилища
+       */
       getUserList() {
         this.users = this.$store.getters.USERS;
       },
+      /**
+       * Открывает форму
+       */
       open() {
         this.isActive = true;
       },
+      /**
+       * Закрывает форму
+       */
       close() {
         this.isViewMode = true;
         this.isActive = false;
       },
+      /**
+       * Активирует вид редактирования задачи
+       */
       turnOnEditTaskMode() {
         this.initData();
         this.initFormData();
         this.isViewMode = false;
       },
+      /**
+       * Вызывает методы инициализации данных компонента
+       */
       initData() {
         this.getTypeList();
         this.getStatusList();
@@ -246,6 +273,9 @@
         this.getPriorityList();
         this.getUserList();
       },
+      /**
+       * Инициализирует форму
+       */
       initFormData() {
 
         Object.keys(this.task)
@@ -261,6 +291,10 @@
             return memo;
           }, null);
       },
+      /**
+       * Формирует новый объект с данными задачи
+       * @param {Object} curTask - данные задачи
+       */
       initTask(curTask) {
         let newTask = {};
 
@@ -272,9 +306,15 @@
 
         this.task = newTask;
       },
+      /**
+       * Инициализирует поле task данными по умолчанию
+       */
       initTaskDefault() {
         this.initTask(this.defaultTask);
       },
+      /**
+       * Формирует объект с данными задачи и кидает событие его сохранения в bus
+       */
       saveTask() {
 
         this.turnOnValidation = true;
@@ -326,10 +366,17 @@
           this.isViewMode = true;
         }
       },
+      /**
+       * Отменяет редактирование, активирует режим просмотра задачи
+       */
       cancel() {
         this.isViewMode = true;
         this.clearErrors();
       },
+      /**
+       * Проверяет поля формы
+       * @returns {boolean}
+       */
       validateFormData() {
         this.errors = {};
 
@@ -350,6 +397,9 @@
 
         return false;
       },
+      /**
+       * Очищает объект ошибок полей формы
+       */
       clearErrors() {
         this.errors = {};
         this.turnOnValidation = false;

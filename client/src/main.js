@@ -19,20 +19,17 @@ new Vue({
   components: { App },
   template: '<App/>',
   methods: {
-    initFilter() {
-      this.$store.dispatch('GET_FILTERS', {
-        version: this.$store.getters.VERSIONS,
-        priority: this.$store.getters.PRIORITIES,
-        type: this.$store.getters.TYPES
-      });
-    },
     init() {
       this.$store.dispatch('GET_STATUSES', []);
       this.$store.dispatch('GET_VERSIONS', []);
       this.$store.dispatch('GET_PRIORITIES', []);
       this.$store.dispatch('GET_TYPES', []);
       this.$store.dispatch('GET_USERS', []);
-      this.initFilter();
+      this.$store.dispatch('GET_FILTERS', {
+        version: this.$store.getters.VERSIONS,
+        priority: this.$store.getters.PRIORITIES,
+        type: this.$store.getters.TYPES
+      });
       this.$store.dispatch('GET_TASKS', []);
     }
   },

@@ -1,6 +1,10 @@
 <template>
 
-  <modal-form-view v-if="isActive" v-on:submit-form="saveTask" v-on:close="close">
+  <modal-form-view
+    v-if="isActive"
+    v-on:submit-form="saveTask"
+    v-on:close="close"
+  >
 
     <template slot="header">
       Добавить задачу <b>{{ formData.number }}</b>
@@ -145,42 +149,60 @@
         priorities: {},
         types: {},
         users: [],
-
         errors: {},
         turnOnValidation: false,
-
         isActive: false,
       }
     },
     methods: {
+      /**
+       * Закрывает форму добавления задачи
+       * */
       close() {
         this.isActive = false;
         this.initTaskDefault();
         this.initFormData();
         this.clearErrors();
       },
+      /**
+       * Открывает форму добавления задачи
+       * */
       open() {
         this.isActive = true;
       },
-      submitForm() {
-        // this.$emit('submit-form');
-        console.log('Отправить форму');
-      },
+      /**
+       * Получает список статусов задачи из хранилища
+       * */
       getStatusList() {
         this.statuses = this.$store.getters.STATUSES;
       },
+      /**
+       * Получает список версий приложения из хранилища
+       * */
       getVersionList() {
         this.versions = this.$store.getters.VERSIONS;
       },
+      /**
+       * Получает список приоритетов задачи из хранилища
+       * */
       getPriorityList() {
         this.priorities = this.$store.getters.PRIORITIES;
       },
+      /**
+       * Получает список типов задачи из хранилища
+       * */
       getTypeList() {
         this.types = this.$store.getters.TYPES;
       },
+      /**
+       * Получает список исполнителей из хранилища
+       * */
       getUserList() {
         this.users = this.$store.getters.USERS;
       },
+      /**
+       * Вызывает методы получения данных для работы компонента
+       * */
       initData() {
         this.getTypeList();
         this.getStatusList();
@@ -188,6 +210,9 @@
         this.getPriorityList();
         this.getUserList();
       },
+      /**
+       * Инициализирует данные формы по умолчанию
+       * */
       initFormData() {
         Object.keys(this.task)
           .reduce((memo, propKey) => {
@@ -202,6 +227,10 @@
             return memo;
           }, null);
       },
+      /**
+       * Формирует объект с данными формы для добавления
+       * @param {Object} curTask - данные задачи
+       * */
       initTask(curTask) {
         let newTask = {};
 
@@ -213,16 +242,19 @@
 
         this.task = newTask;
       },
+      /**
+       * Инициаллизирует поле task начальными данными / очищает форму
+       * */
       initTaskDefault() {
         this.initTask(this.defaultTask);
       },
+      /**
+       * Кидает событие сохранения задачи в bus
+       * */
       saveTask() {
 
         this.turnOnValidation = true;
 
-        /*
-        * TODO: нужно генерировать ID задачи и номер
-        * */
         if (this.validateFormData()) {
 
           let newTask = {};
@@ -275,6 +307,10 @@
         }
 
       },
+      /**
+       * Проверяет заполнение полей формы
+       * @returns {boolean}
+       */
       validateFormData() {
 
         this.errors = {};
@@ -297,6 +333,9 @@
 
         return false;
       },
+      /**
+       * Очищает массив ошибок валидации формы
+       */
       clearErrors() {
         this.errors = {};
         this.turnOnValidation = false;

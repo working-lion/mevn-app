@@ -2,7 +2,6 @@
 
   <div :class="columnItemClasses"
        @dragover="dragOver($event)"
-       @dragenter="dragEnter"
        @dragleave="dragLeave"
        @drop="drop($event)"
   >
@@ -23,9 +22,6 @@
         <div class="pointer"></div>
       </div>
     </div>
-    <!--<div class="column-footer">
-      <a href="#" class="add-task" @click="openAddTaskModal">Добавить карточку</a>
-    </div>-->
   </div>
 </template>
 
@@ -35,9 +31,6 @@
 
   // components
   import taskItem from '@/components/tasks/Task'
-
-  // Services
-  import TasksService from '@/services/TasksService'
 
   export default {
     name: 'task-list',
@@ -58,23 +51,31 @@
           'drag-enter': false,
           'drop': false,
         },
-
         isDropAvailable: true,
       }
     },
     methods: {
-      openAddTaskModal() {
-        this.$emit('open-modal');
-      },
+      /**
+       * Обрабатывает событие, при котором курсор находится над текущим контейнером задач
+       * при перетаскивании задачи
+       * @param {Object} e - event
+       */
       dragOver(e) {
         // нужно, чтобы срабатывал drop
         e.preventDefault();
         this.showPointer();
       },
-      dragEnter() {},
+      /**
+       * Обрабатывает событие, при котором курсор покидает текущий контейнер задач
+       * при перетаскивании задачи
+       */
       dragLeave() {
         this.hidePointer();
       },
+      /**
+       * Обрабатывает событие, при котором пользователь кидает в текущий контейнер задач задачу
+       * при перетаскивании задачи
+       */
       drop(e) {
         let draggedTaskId = e.dataTransfer.getData("movedTaskId");
 
@@ -84,18 +85,30 @@
 
         this.hidePointer();
       },
+      /**
+       * Показывает указатель текущего места переноса задачи
+       */
       showPointer() {
         if (this.isDropAvailable) {
           this.columnItemClasses['drag-enter'] = true;
         }
       },
+      /**
+       * Скрывает указатель текущего места переноса задачи
+       */
       hidePointer() {
         this.columnItemClasses['drag-enter'] = false;
       },
+      /**
+       * Делает доступным перенос задачи в данный контейнер задач
+       */
       turnOnDropAvailable() {
         console.log('ВКЛ');
         this.isDropAvailable = true;
       },
+      /**
+       * Делает недоступным перенос задачи в данный контейнер задач
+       */
       turnOffDropAvailable() {
         console.log('ВЫКЛ');
         this.isDropAvailable = false;

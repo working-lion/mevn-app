@@ -3,12 +3,7 @@
     <div class="modal-backdrop">
       <div class="modal">
         <header class="modal-header">
-          <span
-            class="btn-close"
-            @click="close"
-          >
-            &times;
-          </span>
+          <span class="btn-close" @click="close">&times;</span>
           <slot name="header">
             This is the default tile!
           </slot>
@@ -42,9 +37,15 @@
   export default {
     name: 'modal-form-view',
     methods: {
+      /**
+       * Закрывает форму
+       */
       close() {
         this.$emit('close');
       },
+      /**
+       * Кидает событие отправки формы
+       */
       submitForm(){
         this.$emit('submit-form');
       },
@@ -124,7 +125,7 @@
   .form-row select {
     color: #323232;
     font-size: 16px;
-    font-family: Arial;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
     width: 100%;
     height: 32px;
     padding: 0 10px;
