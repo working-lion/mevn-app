@@ -8,6 +8,7 @@ import {store} from './store';
 
 Vue.config.productionTip = false
 
+// шина событий
 export const bus = new Vue();
 
 new Vue({
